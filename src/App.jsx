@@ -1,6 +1,8 @@
+import { useState } from "react";
 import "./App.css";
 
 function App() {
+  const [input, setInput] = useState();
   // Initialize a 25x25 matrix (625 cells)
   var qrMatrix = Array.from({ length: 25 }, () => Array(25).fill(0));
   var fixedPos = [
@@ -136,37 +138,86 @@ function App() {
     [17, 8],
     // [22, 24],
   ];
-
+  1100101;
   for (var i = 0; i < fixedPos.length; i++) {
     qrMatrix[fixedPos[i][0]][fixedPos[i][1]] = 1;
   }
+  const getBinary = () => {
+    let ascii = [];
+    for (var i = 0; i < input.length; i++) {
+      let asciiVal = input.charCodeAt(i);
+      let binary = asciiVal.toString(2).padStart(8, "0");
+      ascii.push(binary);
+    }
+    console.log(ascii, input.length.toString(2).padStart(8, "0"));
+  };
   return (
     <>
-      <div
-        style={{
-          width: "500px",
-          height: "500px",
-          display: "grid",
-          gridTemplateColumns: "repeat(25, 1fr)",
-          gridTemplateRows: "repeat(25, 1fr)",
-          border: "20px solid white",
-          boxSizing: "border-box",
-        }}
-      >
-        {qrMatrix.map((data) => {
-          return data.map((val, i) => {
-            return (
-              <div
-                className="divitem"
-                key={i}
-                style={{
-                  backgroundColor: val == 1 ? "black" : "white",
-                  border: "1px solid #dce1e8",
-                }}
-              ></div>
-            );
-          });
-        })}
+      <div>
+        <input
+          type="text"
+          onChange={(e) => {
+            setInput(e.target.value);
+          }}
+        ></input>
+        <button onClick={getBinary}>GENERATE QR</button>
+      </div>
+      <div style={{ display: "flex" }}>
+        <div
+          style={{
+            width: "500px",
+            height: "500px",
+            display: "grid",
+            gridTemplateColumns: "repeat(25, 1fr)",
+            gridTemplateRows: "repeat(25, 1fr)",
+            border: "20px solid white",
+            boxSizing: "border-box",
+          }}
+        >
+          {qrMatrix.map((data) => {
+            return data.map((val, i) => {
+              return (
+                <div
+                  className="divitem"
+                  key={i}
+                  style={{
+                    backgroundColor: val == 1 ? "black" : "white",
+                    // border: "1px solid #dce1e8",
+                  }}
+                ></div>
+              );
+            });
+          })}
+        </div>
+        <div
+          style={{
+            width: "700px",
+            height: "700px",
+            display: "grid",
+            gridTemplateColumns: "repeat(25, 1fr)",
+            gridTemplateRows: "repeat(25, 1fr)",
+            // border: "20px solid white",
+            boxSizing: "border-box",
+          }}
+        >
+          {qrMatrix.map((data) => {
+            return data.map((val, i) => {
+              return (
+                <div
+                  key={i}
+                  style={{
+                    backgroundColor: "white",
+                    border: val == 1 ? "1px solid black" : "1px solid #dce1e8",
+                    color: val == 1 ? "red" : "blue",
+                    textAlign: "center",
+                  }}
+                >
+                  {val}
+                </div>
+              );
+            });
+          })}
+        </div>
       </div>
     </>
   );
