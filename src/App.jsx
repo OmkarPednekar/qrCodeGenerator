@@ -147,10 +147,10 @@ function App() {
           width: "500px",
           height: "500px",
           display: "grid",
-          gridTemplateColumns: "repeat(25, 1fr)", // 25 equal columns
-          gridTemplateRows: "repeat(25, 1fr)", // 25 equal rows
-          border: "20px solid white", // This creates the Quiet Zone
-          boxSizing: "border-box", // Ensures that the border is included in the width and height
+          gridTemplateColumns: "repeat(25, 1fr)",
+          gridTemplateRows: "repeat(25, 1fr)",
+          border: "20px solid white",
+          boxSizing: "border-box",
         }}
       >
         {qrMatrix.map((data) => {
