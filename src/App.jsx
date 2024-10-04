@@ -5,6 +5,7 @@ function App() {
   const [input, setInput] = useState();
   const [binary, setBinary] = useState();
   const [matrix, setMatrix] = useState([]);
+  const [mark, setMark] = useState([]);
 
   // Initialize a 25x25 matrix (625 cells)
   var qrMatrix = Array.from({ length: 25 }, () => Array(25).fill([0, "||"]));
@@ -138,7 +139,24 @@ function App() {
     [6, 14],
     [6, 16],
     [17, 8],
-    // [22, 24],
+    [8, 0],
+    [8, 1],
+    [8, 2],
+    [8, 3],
+    [8, 8],
+    [4, 8],
+    [3, 8],
+    [2, 8],
+    [0, 8],
+    [24, 8],
+    [23, 8],
+    [22, 8],
+    [21, 8],
+    [8, 17],
+    [8, 20],
+    [8, 21],
+    [8, 22],
+    [8, 24],
   ];
   var whitePos = [
     [1, 1],
@@ -251,6 +269,19 @@ function App() {
     [6, 11],
     [6, 13],
     [6, 15],
+
+    [8, 4],
+    [8, 5],
+    [8, 7],
+    [7, 8],
+    [5, 8],
+    [1, 8],
+    [20, 8],
+    [19, 8],
+    [18, 8],
+    [8, 18],
+    [8, 19],
+    [8, 23],
   ];
 
   const getBinary = () => {
@@ -315,7 +346,12 @@ function App() {
     // }
     setMatrix(qrMatrix);
   };
-
+  const markit = (row, col) => {
+    let tmp = mark;
+    tmp.push([row, col]);
+    setMark(tmp);
+    console.log(tmp);
+  };
   return (
     <>
       <div>
@@ -374,6 +410,9 @@ function App() {
                 return (
                   <div
                     key={i}
+                    onClick={() => {
+                      markit(index, i);
+                    }}
                     className="divitem"
                     style={{
                       backgroundColor:
