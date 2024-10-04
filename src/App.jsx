@@ -4,8 +4,10 @@ import "./App.css";
 function App() {
   const [input, setInput] = useState();
   const [binary, setBinary] = useState();
+  const [matrix, setMatrix] = useState([]);
+
   // Initialize a 25x25 matrix (625 cells)
-  var qrMatrix = Array.from({ length: 25 }, () => Array(25).fill(0));
+  var qrMatrix = Array.from({ length: 25 }, () => Array(25).fill([0, "||"]));
   var fixedPos = [
     [0, 0],
     [0, 1],
@@ -135,16 +137,125 @@ function App() {
     [6, 12],
     [6, 14],
     [6, 16],
-    [24, 23],
     [17, 8],
     // [22, 24],
   ];
-  1100101;
-  for (var i = 0; i < fixedPos.length; i++) {
-    qrMatrix[fixedPos[i][0]][fixedPos[i][1]] = 1;
-  }
+  var whitePos = [
+    [1, 1],
+    [1, 2],
+    [1, 3],
+    [1, 4],
+    [1, 5],
+    [2, 5],
+    [3, 5],
+    [4, 5],
+    [5, 5],
+    [5, 4],
+    [5, 3],
+    [5, 2],
+    [5, 1],
+    [4, 1],
+    [3, 1],
+    [2, 1],
+    [7, 0],
+    [7, 1],
+    [7, 2],
+    [7, 3],
+    [7, 4],
+    [7, 5],
+    [7, 6],
+    [7, 7],
+    [6, 7],
+    [5, 7],
+    [4, 7],
+    [3, 7],
+    [2, 7],
+    [1, 7],
+    [0, 7],
+    [1, 19],
+    [1, 20],
+    [1, 21],
+    [1, 22],
+    [1, 23],
+    [2, 23],
+    [3, 23],
+    [4, 23],
+    [5, 23],
+    [5, 22],
+    [5, 21],
+    [5, 20],
+    [5, 19],
+    [4, 19],
+    [3, 19],
+    [2, 19],
+    [1, 19],
+    [0, 17],
+    [1, 17],
+    [2, 17],
+    [3, 17],
+    [4, 17],
+    [5, 17],
+    [6, 17],
+    [7, 17],
+    [7, 18],
+    [7, 19],
+    [7, 20],
+    [7, 21],
+    [7, 22],
+    [7, 23],
+    [7, 24],
+    [17, 17],
+    [17, 18],
+    [17, 19],
+    [18, 19],
+    [19, 19],
+    [19, 18],
+    [19, 17],
+    [18, 17],
+    [19, 1],
+    [19, 2],
+    [19, 3],
+    [19, 4],
+    [19, 5],
+    [20, 5],
+    [21, 5],
+    [22, 5],
+    [23, 5],
+    [23, 4],
+    [23, 3],
+    [23, 2],
+    [23, 1],
+    [22, 1],
+    [21, 1],
+    [20, 1],
+    [17, 0],
+    [17, 1],
+    [17, 2],
+    [17, 3],
+    [17, 4],
+    [17, 5],
+    [17, 6],
+    [17, 7],
+    [18, 7],
+    [19, 7],
+    [20, 7],
+    [21, 7],
+    [22, 7],
+    [23, 7],
+    [24, 7],
+    [9, 6],
+    [11, 6],
+    [13, 6],
+    [15, 6],
+    [6, 9],
+    [6, 11],
+    [6, 13],
+    [6, 15],
+  ];
+
   const getBinary = () => {
     let ascii = [];
+    ascii.push("0100");
     ascii.push(input.length.toString(2).padStart(8, "0"));
     for (var i = 0; i < input.length; i++) {
       let asciiVal = input.charCodeAt(i);
@@ -154,7 +265,57 @@ function App() {
     ascii.push("0000");
     let binaryString = ascii.join("");
     setBinary(binaryString);
+    for (var x = 0; x < fixedPos.length; x++) {
+      qrMatrix[fixedPos[x][0]][fixedPos[x][1]] = [1, "Y"];
+    }
+    for (var y = 0; y < whitePos.length; y++) {
+      qrMatrix[whitePos[y][0]][whitePos[y][1]] = [0, "Y"];
+    }
+    // let direction = 1;
+    // if (qrMatrix[row][col][1] == "X" && pointer < binaryString.length) {
+    //   qrMatrix[row][col][0] = binaryString[pointer];
+    //   qrMatrix[row][col][1] = "Y";
+    //   pointer++;
+    // }
+    // let oddPointer = 1;
+    // let evenPointer = 0;
+    // for (var col = 24; col >= 0; col--) {
+    //   for (var row = 24; row >= 0; row--) {
+    //     if (
+    //       col % 2 == 0 &&
+    //       qrMatrix[row][col][1] == "X" &&
+    //       evenPointer < binaryString.length
+    //     ) {
+    //       qrMatrix[row][col][0] = binaryString[evenPointer];
+    //       qrMatrix[row][col][1] = "Y";
+    //       evenPointer = evenPointer + 2;
+    //     } else if (
+    //       col % 2 != 0 &&
+    //       qrMatrix[row][col][1] == "X" &&
+    //       oddPointer < binaryString.length
+    //     ) {
+    //       console.log(oddPointer);
+    //       qrMatrix[row][col][0] = binaryString[oddPointer];
+    //       qrMatrix[row][col][1] = "Y";
+    //       oddPointer = oddPointer + 2;
+    //     }
+    //   }
+    // }
+    // let pointer = 0;
+    // let row = 24;
+    // let col = 24;
+    // let direction = 0;
+    // while (pointer < binaryString.length) {
+    //   console.log(row, col);
+
+    //   if (row == 0) {
+    //     col--;
+    //     row = 24;
+    //   }
+    // }
+    setMatrix(qrMatrix);
   };
+
   return (
     <>
       <div>
@@ -167,63 +328,78 @@ function App() {
         <button onClick={getBinary}>GENERATE QR</button>
         {binary}
       </div>
-      <div style={{ display: "flex" }}>
-        <div
-          style={{
-            width: "500px",
-            height: "500px",
-            display: "grid",
-            gridTemplateColumns: "repeat(25, 1fr)",
-            gridTemplateRows: "repeat(25, 1fr)",
-            border: "20px solid white",
-            boxSizing: "border-box",
-          }}
-        >
-          {qrMatrix.map((data) => {
-            return data.map((val, i) => {
-              return (
-                <div
-                  className="divitem"
-                  key={i}
-                  style={{
-                    backgroundColor: val == 1 ? "black" : "white",
-                    // border: "1px solid #dce1e8",
-                  }}
-                ></div>
-              );
-            });
-          })}
+      {matrix.length < 1 ? (
+        <p></p>
+      ) : (
+        <div style={{ display: "flex" }}>
+          <div
+            style={{
+              width: "500px",
+              height: "500px",
+              display: "grid",
+              gridTemplateColumns: "repeat(25, 1fr)",
+              gridTemplateRows: "repeat(25, 1fr)",
+              border: "20px solid white",
+              boxSizing: "border-box",
+            }}
+          >
+            {matrix.map((data, index) => {
+              return data.map((val, i) => {
+                return (
+                  <div
+                    className="divitem"
+                    key={i}
+                    style={{
+                      backgroundColor: val[0] == 1 ? "black" : "white",
+                      // border: "1px solid #dce1e8",
+                    }}
+                  ></div>
+                );
+              });
+            })}
+          </div>
+          <div
+            style={{
+              width: "700px",
+              height: "700px",
+              display: "grid",
+              gridTemplateColumns: "repeat(25, 1fr)",
+              gridTemplateRows: "repeat(25, 1fr)",
+              // border: "20px solid white",
+              boxSizing: "border-box",
+            }}
+          >
+            {matrix.map((data, index) => {
+              return data.map((val, i) => {
+                return (
+                  <div
+                    key={i}
+                    className="divitem"
+                    style={{
+                      backgroundColor:
+                        val[1] == "Y" ? "lightgray" : "greenyellow",
+                      border:
+                        val[0] == 1 ? "1px solid black" : "1px solid #dce1e8",
+                      color:
+                        val[1] == "Y"
+                          ? val[0] == 0
+                            ? "yellow"
+                            : "red"
+                          : "blue",
+                      textAlign: "center",
+
+                      // transform:
+                      //   val[1] == "|" ? `rotate(${(360 % index) + 1}deg)` : "",
+                    }}
+                  >
+                    {val[0]}
+                  </div>
+                );
+              });
+            })}
+          </div>
         </div>
-        <div
-          style={{
-            width: "700px",
-            height: "700px",
-            display: "grid",
-            gridTemplateColumns: "repeat(25, 1fr)",
-            gridTemplateRows: "repeat(25, 1fr)",
-            // border: "20px solid white",
-            boxSizing: "border-box",
-          }}
-        >
-          {qrMatrix.map((data) => {
-            return data.map((val, i) => {
-              return (
-                <div
-                  key={i}
-                  style={{
-                    backgroundColor: "white",
-                    border: val == 1 ? "1px solid black" : "1px solid #dce1e8",
-                    color: val == 1 ? "red" : "blue",
-                    textAlign: "center",
-                  }}
-                >
-                  {val}
-                </div>
-              );
-            });
-          })}
-        </div>
-      </div>
+      )}
     </>
   );
 }

@@ -1,5 +1,6 @@
 .divitem:hover {
-  background-color: red !important ;
+  background-color: chartreuse !important ;
+  cursor: pointer;
 }
 
 /* #root {
