@@ -3,6 +3,7 @@ import "./App.css";
 
 function App() {
   const [input, setInput] = useState();
+  const [binary, setBinary] = useState();
   // Initialize a 25x25 matrix (625 cells)
   var qrMatrix = Array.from({ length: 25 }, () => Array(25).fill(0));
   var fixedPos = [
@@ -144,12 +145,15 @@ function App() {
   }
   const getBinary = () => {
     let ascii = [];
+    ascii.push(input.length.toString(2).padStart(8, "0"));
     for (var i = 0; i < input.length; i++) {
       let asciiVal = input.charCodeAt(i);
       let binary = asciiVal.toString(2).padStart(8, "0");
       ascii.push(binary);
     }
-    console.log(ascii, input.length.toString(2).padStart(8, "0"));
+    ascii.push("0000");
+    let binaryString = ascii.join("");
+    setBinary(binaryString);
   };
   return (
     <>
@@ -161,6 +165,7 @@ function App() {
           }}
         ></input>
         <button onClick={getBinary}>GENERATE QR</button>
+        {binary}
       </div>
       <div style={{ display: "flex" }}>
         <div
