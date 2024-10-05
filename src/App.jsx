@@ -337,7 +337,7 @@ function App() {
     }
     return codeArr;
   };
-  const getBinary = async () => {
+  const getBinary = () => {
     let ascii = [];
     ascii.push("0100");
     ascii.push(input.length.toString(2).padStart(8, "0"));
@@ -361,14 +361,15 @@ function App() {
     for (var y = 0; y < whitePos.length; y++) {
       qrMatrix[whitePos[y][0]][whitePos[y][1]] = [0, "Y"];
     }
-    let errorCodeWords = await generateErrorCodes(messagePloy);
+    let errorCodeWords = generateErrorCodes(messagePolyarr);
+    let errCodeArr = [];
+    for (var i = 0; i < errorCodeWords.length; i++) {
+      let binary = errorCodeWords[i].toString(2).padStart(8, "0");
+      errCodeArr.push(binary);
+    }
     // let codeWords = [58, 64, 142, 238, 199, 51, 89, 207, 88, 213];
-    // let code = [];
-    // for (var ii = 0; ii < codeWords.length; ii++) {
-    //   let binary = codeWords[ii].toString(2).padStart(8, "0");
-    //   code.push(binary);
-    // }
-    console.log(errorCodeWords);
+
+    console.log(ascii, errCodeArr);
     setMatrix(qrMatrix);
   };
   const markit = (row, col) => {
