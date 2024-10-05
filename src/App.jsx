@@ -1,12 +1,12 @@
 import { useState } from "react";
 import "./App.css";
-
+import { exponentToInteger, integerToExponent } from "./logstables";
 function App() {
   const [input, setInput] = useState();
   const [binary, setBinary] = useState();
   const [matrix, setMatrix] = useState([]);
   const [mark, setMark] = useState([]);
-
+  const [messagePloy, setMessagePloy] = useState([]);
   // Initialize a 25x25 matrix (625 cells)
   var qrMatrix = Array.from({ length: 25 }, () => Array(25).fill([0, "||"]));
   var fixedPos = [
@@ -283,8 +283,61 @@ function App() {
     [8, 19],
     [8, 23],
   ];
+  const generateErrorCodes = (input) => {
+    let generatorPloyPowers = [0, 251, 67, 46, 61, 118, 70, 64, 94, 32, 45];
+    let generatorPloyCoeffPowers = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
+    let messageXPowers = [];
+    let paddedArray = input;
+    if (input.length < 10) {
+      let reqlength = input.length + 9;
+      for (var p = 0; p <= reqlength; ++p) {
+        messageXPowers.push(reqlength - p);
+      }
+      paddedArray = [...input, ...Array(reqlength - input.length + 1).fill(0)];
+      for (var g = 0; g < generatorPloyCoeffPowers.length; g++) {
+        generatorPloyCoeffPowers[g] =
+          generatorPloyCoeffPowers[g] + (input.length - 1);
+      }
+    } else {
+      for (var g = 0; g < generatorPloyCoeffPowers.length; g++) {
+        generatorPloyCoeffPowers[g] =
+          generatorPloyCoeffPowers[g] + (input.length - 1 - 10);
+      }
+    }
+    let codeArr = paddedArray;
+    let genPolyPow = generatorPloyPowers;
+    for (var x = 0; x < input.length; x++) {
+      // find coefficient of alpha
 
-  const getBinary = () => {
+      let coefficientToIn = integerToExponent[codeArr[0]];
+      let intToCoeffi = [];
+      for (var i = 0; i < generatorPloyPowers.length; i++) {
+        let val =
+          [0, 251, 67, 46, 61, 118, 70, 64, 94, 32, 45][i] + coefficientToIn;
+
+        if (val > 255) {
+          val = val % 255;
+        }
+        genPolyPow[i] = val;
+
+        intToCoeffi.push(exponentToInteger[genPolyPow[i]]);
+      }
+      let xorVal = [];
+      for (var j = 0; j < intToCoeffi.length; j++) {
+        xorVal.push(codeArr[j] ^ intToCoeffi[j]);
+      }
+      codeArr = xorVal.slice(1);
+
+      // console.log(genPolyPow);
+      //add that to generatorPloyPowers and %255 if value > 256
+      //find intergers of those values
+      //do a XOR between those intergers and paddedArray
+      //eliminate 0 term and this will be new message ploynomial array
+      //repeat
+    }
+    return codeArr;
+  };
+  const getBinary = async () => {
     let ascii = [];
     ascii.push("0100");
     ascii.push(input.length.toString(2).padStart(8, "0"));
@@ -295,6 +348,12 @@ function App() {
     }
     ascii.push("0000");
     let binaryString = ascii.join("");
+    let messagePolyarr = [];
+
+    for (var a = 0; a < binaryString.length; a += 8) {
+      messagePolyarr.push(parseInt(binaryString.slice(a, a + 8), 2));
+    }
+    setMessagePloy(messagePolyarr);
     setBinary(binaryString);
     for (var x = 0; x < fixedPos.length; x++) {
       qrMatrix[fixedPos[x][0]][fixedPos[x][1]] = [1, "Y"];
@@ -302,48 +361,14 @@ function App() {
     for (var y = 0; y < whitePos.length; y++) {
       qrMatrix[whitePos[y][0]][whitePos[y][1]] = [0, "Y"];
     }
-    // let direction = 1;
-    // if (qrMatrix[row][col][1] == "X" && pointer < binaryString.length) {
-    //   qrMatrix[row][col][0] = binaryString[pointer];
-    //   qrMatrix[row][col][1] = "Y";
-    //   pointer++;
+    let errorCodeWords = await generateErrorCodes(messagePloy);
+    // let codeWords = [58, 64, 142, 238, 199, 51, 89, 207, 88, 213];
+    // let code = [];
+    // for (var ii = 0; ii < codeWords.length; ii++) {
+    //   let binary = codeWords[ii].toString(2).padStart(8, "0");
+    //   code.push(binary);
     // }
-    // let oddPointer = 1;
-    // let evenPointer = 0;
-    // for (var col = 24; col >= 0; col--) {
-    //   for (var row = 24; row >= 0; row--) {
-    //     if (
-    //       col % 2 == 0 &&
-    //       qrMatrix[row][col][1] == "X" &&
-    //       evenPointer < binaryString.length
-    //     ) {
-    //       qrMatrix[row][col][0] = binaryString[evenPointer];
-    //       qrMatrix[row][col][1] = "Y";
-    //       evenPointer = evenPointer + 2;
-    //     } else if (
-    //       col % 2 != 0 &&
-    //       qrMatrix[row][col][1] == "X" &&
-    //       oddPointer < binaryString.length
-    //     ) {
-    //       console.log(oddPointer);
-    //       qrMatrix[row][col][0] = binaryString[oddPointer];
-    //       qrMatrix[row][col][1] = "Y";
-    //       oddPointer = oddPointer + 2;
-    //     }
-    //   }
-    // }
-    // let pointer = 0;
-    // let row = 24;
-    // let col = 24;
-    // let direction = 0;
-    // while (pointer < binaryString.length) {
-    //   console.log(row, col);
-
-    //   if (row == 0) {
-    //     col--;
-    //     row = 24;
-    //   }
-    // }
+    console.log(errorCodeWords);
     setMatrix(qrMatrix);
   };
   const markit = (row, col) => {
@@ -362,7 +387,36 @@ function App() {
           }}
         ></input>
         <button onClick={getBinary}>GENERATE QR</button>
-        {binary}
+        <br />
+        MESSAGE : {binary}
+        <br />
+        LENGTH : {binary != undefined ? binary.length : ""}
+        <br />
+        MESSAGE PLOYNOMIAL :{" "}
+        <div style={{ display: "flex" }}>
+          {messagePloy.length > 0 ? (
+            messagePloy.map((data, index) => {
+              return (
+                <div key={index} style={{ margin: "0px 2px", display: "flex" }}>
+                  {data}x<sup>{messagePloy.length - 1 - index}</sup>{" "}
+                  {index != messagePloy.length - 1 ? <div>+</div> : ""}
+                </div>
+              );
+            })
+          ) : (
+            <p></p>
+          )}
+        </div>
+        <p>
+          {" "}
+          Generator polynomial for 10 error correction code words:
+          <br />ɑ<sup>0</sup>x<sup>10</sup> + ɑ<sup>251</sup>x<sup>9</sup> + ɑ
+          <sup>67</sup>x<sup>8</sup> + ɑ<sup>46</sup>x<sup>7</sup> + ɑ
+          <sup>61</sup>x<sup>6</sup> + ɑ<sup>118</sup>x<sup>5</sup> + ɑ
+          <sup>70</sup>x<sup>4</sup> + ɑ<sup>64</sup>x<sup>3</sup> + ɑ
+          <sup>94</sup>x<sup>2</sup> + ɑ<sup>32</sup>x + ɑ<sup>45</sup>
+        </p>
+        <br />
       </div>
       {matrix.length < 1 ? (
         <p></p>
