@@ -16,6 +16,8 @@ Customizable Text Input: Users can input any text which is converted into a QR c
 
 ## Demo
 
+![](https://github.com/OmkarPednekar/qrCodeGenerator/blob/main/gifqr.gif)
+
 Here's how the QR code generator works:
 
 Input text into the generator (e.g., "Hello, World!").
